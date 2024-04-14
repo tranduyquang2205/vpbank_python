@@ -27,7 +27,7 @@ def login_api(input: LoginDetails):
         response = str(e)
         print(traceback.format_exc())
         print(sys.exc_info()[2])
-        return APIResponse.json_format(response)
+        return APIResponse.json_format(response,True)
 
 class ConfirmLoginDetails(BaseModel):
     username: str
@@ -45,7 +45,7 @@ def login_api(input: ConfirmLoginDetails):
         response = str(e)
         print(traceback.format_exc())
         print(sys.exc_info()[2])
-        return APIResponse.json_format(response)
+        return APIResponse.json_format(response,True)
 
 @app.post('/get_balance', tags=["get_balance"])
 def get_balance_api(input: LoginDetails):
@@ -57,7 +57,7 @@ def get_balance_api(input: LoginDetails):
         response = str(e)
         print(traceback.format_exc())
         print(sys.exc_info()[2])
-        return APIResponse.json_format(response)
+        return APIResponse.json_format(response,True)
     
 class Transactions(BaseModel):
     username: str
@@ -76,7 +76,7 @@ def get_transactions_api(input: Transactions):
         response = str(e)
         print(traceback.format_exc())
         print(sys.exc_info()[2])
-        return APIResponse.json_format(response)
+        return APIResponse.json_format(response,True)
     
 if __name__ == "__main__":
     uvicorn.run(app ,host='0.0.0.0', port=3000)

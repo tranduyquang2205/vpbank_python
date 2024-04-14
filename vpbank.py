@@ -419,8 +419,10 @@ account_number = "296813408"
 fromDate="06/01/2024"
 toDate= "07/03/2024"
 vpbank = VPBank(username, password,account_number)
-balance = vpbank.get_balance()
-print(balance)
+history = vpbank.check_history(fromDate,toDate)
+print(history)
+# balance = vpbank.get_balance()
+# print(balance)
 # import_otp = vpbank.import_otp("123")
 # print(import_otp)
 # login = vpbank.login()
