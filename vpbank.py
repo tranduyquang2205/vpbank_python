@@ -338,11 +338,12 @@ MaxDataServiceVersion: 2.0
                                 'transactions':body['d']['DepositAccountTransactions']['results'],
                     }}
         else:
+            print(body)
             return  {
                         "success": False,
                         "code": 503,
                         "message": "Service Unavailable!"
-                    },
+                    }
 
     def check_account_name(self, account_number, bank_code):
         bank_id = self.find_id_by_bank_code(self.bank_list['d']['results'], bank_code)
