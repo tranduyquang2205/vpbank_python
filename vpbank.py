@@ -122,7 +122,7 @@ class VPBank:
             if body['d']['TRUSTED_DEVICE_ENABLED']:
                 return {
                     'code': 302,
-                    'status': True,
+                    'success': True,
                     'message': 'Vui lòng nhập mã xác thực từ điện thoại',
                     'data':{
                          'tokenKey': tokenKey,
@@ -134,7 +134,7 @@ class VPBank:
                 self.is_login = True
                 return {
                     'code': 200,
-                    'status': True,
+                    'success': True,
                     'message': 'Đăng nhập thành công',
                     'data':{
                          'tokenKey': tokenKey,
@@ -194,7 +194,7 @@ class VPBank:
         elif 'd' in result and 'StatusCode' in result['d'] and result['d']['StatusCode'] == 0:
             return {
                     'code': 200,
-                    'status': True,
+                    'success': True,
                     'message': 'Đăng nhập thành công',
                     'data':{
                          'tokenKey': self.tokenKey,
@@ -413,12 +413,14 @@ MaxDataServiceVersion: 2.0
             return json.dumps({'status': 'error', 'message': 'Đã xảy ra lỗi!'})
 
 
-# username = "0886438795"
-# password = "Dqxkv2205.,"
-# account_number = "296813408"
-# fromDate="06/01/2024"
-# toDate= "07/03/2024"
-# vpbank = VPBank(username, password,account_number)
+username = "0886438795"
+password = "Dqxkv2205.,"
+account_number = "296813408"
+fromDate="06/01/2024"
+toDate= "07/03/2024"
+vpbank = VPBank(username, password,account_number)
+balance = vpbank.get_balance()
+print(balance)
 # import_otp = vpbank.import_otp("123")
 # print(import_otp)
 # login = vpbank.login()
