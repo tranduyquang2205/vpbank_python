@@ -413,14 +413,14 @@ MaxDataServiceVersion: 2.0
             return json.dumps({'status': 'error', 'message': 'Đã xảy ra lỗi!'})
 
 
-username = "0886438795"
-password = "Dqxkv2205.,"
-account_number = "296813408"
-fromDate="06/01/2024"
-toDate= "07/03/2024"
-vpbank = VPBank(username, password,account_number)
-history = vpbank.check_history(fromDate,toDate)
-print(history)
+# username = "0886438795"
+# password = "Dqxkv2205.,"
+# account_number = "296813408"
+# fromDate="06/01/2024"
+# toDate= "07/03/2024"
+# vpbank = VPBank(username, password,account_number)
+# history = vpbank.check_history(fromDate,toDate)
+# print(history)
 # balance = vpbank.get_balance()
 # print(balance)
 # import_otp = vpbank.import_otp("123")

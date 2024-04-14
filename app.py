@@ -71,6 +71,7 @@ def get_transactions_api(input: Transactions):
     try:
         vpbank = VPBank(input.username, input.password,input.account_number)
         transactions = vpbank.check_history(input.from_date,input.to_date)
+        print(transactions)
         return APIResponse.json_format(transactions)
     except Exception as e:
         response = str(e)
