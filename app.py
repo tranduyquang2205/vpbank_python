@@ -21,7 +21,7 @@ class LoginDetails(BaseModel):
 def login_api(input: LoginDetails):
     try:
         vpbank = VPBank(input.username, input.password,input.account_number)
-        login = vpbank.login(input.username, input.password)
+        login = vpbank.login()
         return APIResponse.json_format(login)
     except Exception as e:
         response = str(e)
