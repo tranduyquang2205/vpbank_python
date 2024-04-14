@@ -338,7 +338,6 @@ MaxDataServiceVersion: 2.0
                                 'transactions':body['d']['DepositAccountTransactions']['results'],
                     }}
         else:
-            print(body)
             return  {
                         "success": False,
                         "code": 503,
