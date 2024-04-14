@@ -1,0 +1,3 @@
+Run the following command to run
+>> python app.py
+>> import otp in command line for first time login(if required)
