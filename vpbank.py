@@ -172,7 +172,19 @@ class VPBank:
             'Referer': 'https://neo.vpbank.com.vn/main.html',
         }
         response = requests.get(url, headers=headers,cookies=self.cookie)
-        result = response.json()
+        if response.status_code == 403:
+            return {'code':401,'success': False, 'message': 'Unauthorized!'}
+        
+        if response.status_code != 200:
+            return {'code':response.status_code,'success': False, 'message': 'Unknown error!'}
+        try:
+            result = response.json()
+        except json.decoder.JSONDecodeError:
+            result = {
+                "success": False,
+                "code" : 503,
+                 "message": "Service Unavailable!"
+            }
         if 'error' in result:
             return {
                 'code': 401,
@@ -407,6 +419,8 @@ MaxDataServiceVersion: 2.0
 # fromDate="06/01/2024"
 # toDate= "07/03/2024"
 # vpbank = VPBank(username, password,account_number)
+# import_otp = vpbank.import_otp("123")
+# print(import_otp)
 # login = vpbank.login()
 # from api_response import APIResponse
 # print(APIResponse.json_format(login))
