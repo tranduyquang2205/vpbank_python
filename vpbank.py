@@ -184,11 +184,9 @@ class VPBank:
             'Referer': 'https://neo.vpbank.com.vn/main.html',
         }
         response = requests.get(url, headers=headers,cookies=self.cookie)
+        
         if response.status_code == 403:
             return {'code':401,'success': False, 'message': 'Unauthorized!'}
-        
-        if response.status_code != 200:
-            return {'code':response.status_code,'success': False, 'message': 'Unknown error!'}
         try:
             result = response.json()
         except json.decoder.JSONDecodeError:
@@ -197,12 +195,9 @@ class VPBank:
                 "code" : 503,
                  "message": "Service Unavailable!"
             }
+
         if 'error' in result:
-            return {
-                'code': 401,
-                'success': False,
-                'message': 'Mã không hợp lệ hoặc đã hết hạn (Unauthorized)!'
-                }
+                return {'code':response.status_code,'success': False, 'message': result['error']['message']['value']}
         elif 'd' in result and 'StatusCode' in result['d'] and result['d']['StatusCode'] == 0:
             return {
                     'code': 200,
