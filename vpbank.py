@@ -118,6 +118,7 @@ class VPBank:
         self.tokenKey = tokenKey
         self.csrf = csrf 
         self.cookie = cookie_string
+        self.save_data()
         if body.get('d'):
             if body['d']['TRUSTED_DEVICE_ENABLED']:
                 return {
