@@ -337,12 +337,24 @@ MaxDataServiceVersion: 2.0
                             'data':{
                                 'transactions':body['d']['DepositAccountTransactions']['results'],
                     }}
+        elif 'error' in body:
+            if body['error']['code'] == 'UAF':
+                    return  {
+                        "success": False,
+                        "code": 401,
+                        "message": "User Authentication Failed or timed out.!"
+                    }
+            else:
+                    return  {
+                        "success": False,
+                        "code": 400,
+                        "message": body['error']['message']['value']
+                    }
         else:
-            print(body)
             return  {
                         "success": False,
                         "code": 503,
-                        "message": "Service Unavailable!!"
+                        "message": "Service Unavailable!"
                     }
 
     def check_account_name(self, account_number, bank_code):
