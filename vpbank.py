@@ -49,7 +49,7 @@ class VPBank:
             'account_number': self.account_number,
             'tokenKey': self.tokenKey,
             'csrf': self.csrf,
-            'cookie': requests.utils.dict_from_cookiejar(self.cookie),
+            'cookie': requests.utils.dict_from_cookiejar(self.cookie) if self.cookie else None,
             'is_login': self.is_login,
         }
         with open(f"db/users/{self.username}.json", 'w') as file:
@@ -62,7 +62,7 @@ class VPBank:
             self.account_number = data['account_number']
             self.tokenKey = data['tokenKey']
             self.csrf = data['csrf']
-            self.cookie = requests.utils.cookiejar_from_dict(data['cookie'])
+            self.cookie = requests.utils.cookiejar_from_dict(data['cookie']) if data['cookie'] else None
             self.is_login = data['is_login']
     def find_id_by_bank_code(self, array, bank_code):
         for item in array:
