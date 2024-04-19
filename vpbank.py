@@ -205,8 +205,7 @@ class VPBank:
                     'message': 'Đăng nhập thành công',
                     'data':{
                          'tokenKey': self.tokenKey,
-                         'csrf': self.csrf,
-                         'cookie': self.cookie
+                         'csrf': self.csrf
                     }
                 }
         return {'code':520 ,'success': False, 'message': 'Unknown Error!'} 
