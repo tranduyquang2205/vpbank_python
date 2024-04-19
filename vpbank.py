@@ -31,6 +31,17 @@ class VPBank:
             self.password = password
             self.account_number = account_number
             self.save_data()
+    def save_cookies(self,cookie_jar):
+        with open(self.cookies_file, 'w') as f:
+            json.dump(cookie_jar.get_dict(), f)
+    def load_cookies(self):
+        try:
+            with open(self.cookies_file, 'r') as f:
+                cookies = json.load(f)
+                self.cookies = cookies
+                return
+        except (FileNotFoundError, json.decoder.JSONDecodeError):
+            return requests.cookies.RequestsCookieJar()
     def save_data(self):
         data = {
             'username': self.username,
@@ -38,7 +49,7 @@ class VPBank:
             'account_number': self.account_number,
             'tokenKey': self.tokenKey,
             'csrf': self.csrf,
-            'cookie': self.cookie,
+            'cookie': requests.utils.dict_from_cookiejar(self.cookie),
             'is_login': self.is_login,
         }
         with open(f"db/users/{self.username}.json", 'w') as file:
@@ -51,7 +62,7 @@ class VPBank:
             self.account_number = data['account_number']
             self.tokenKey = data['tokenKey']
             self.csrf = data['csrf']
-            self.cookie = data['cookie']
+            self.cookie = requests.utils.cookiejar_from_dict(data['cookie'])
             self.is_login = data['is_login']
     def find_id_by_bank_code(self, array, bank_code):
         for item in array:
