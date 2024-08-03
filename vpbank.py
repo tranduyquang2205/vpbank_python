@@ -338,6 +338,7 @@ MaxDataServiceVersion: 2.0
         pattern = r'\n({.+)\n'
         matches = re.search(pattern, response.text)
         body = json.loads(matches[1])
+        print(body)
         if 'd' in body and 'DepositAccountTransactions' in body['d']:
             return {'code':200,'success': True, 'message': 'Thành công',
                             'data':{
@@ -432,29 +433,29 @@ MaxDataServiceVersion: 2.0
             return json.dumps({'status': 'error', 'message': 'Đã xảy ra lỗi!'})
 
 
-# username = "0886438795"
-# password = "Dqxkv2205.,"
-# account_number = "296813408"
-# fromDate="06/01/2024"
-# toDate= "07/03/2024"
-# vpbank = VPBank(username, password,account_number)
+username = "0904158355"
+password = "Trang1990@"
+account_number = "334764044"
+fromDate="03/08/2024"
+toDate= "03/08/2024"
+vpbank = VPBank(username, password,account_number)
 # history = vpbank.check_history(fromDate,toDate)
 # print(history)
 # balance = vpbank.get_balance()
 # print(balance)
 # import_otp = vpbank.import_otp("123")
 # print(import_otp)
-# login = vpbank.login()
-# from api_response import APIResponse
-# print(APIResponse.json_format(login))
-# if 'Vui lòng nhập mã xác thực từ điện thoại' in login['message']:
-#     otp = input("\n")
-#     if otp:
-#         import_otp = vpbank.import_otp(otp)
-#         print(import_otp)
-# elif 'Đăng nhập thành công' in login['message']:
-#     balance = vpbank.get_balance()
-#     print(balance)
+login = vpbank.login()
+from api_response import APIResponse
+print(login)
+if 'Vui lòng nhập mã xác thực từ điện thoại' in login['message']:
+    otp = input("\n")
+    if otp:
+        import_otp = vpbank.import_otp(otp)
+        print(import_otp)
+elif 'Đăng nhập thành công' in login['message']:
+    balance = vpbank.get_balance()
+    print(balance)
 
-#     history = vpbank.check_history(fromDate,toDate)
-#     print(history)
+    history = vpbank.check_history(fromDate,toDate)
+    print(history)
