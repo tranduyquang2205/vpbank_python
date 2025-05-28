@@ -6,7 +6,18 @@ import uuid
 import re
 import os
 class VPBank:
-    def __init__(self,username, password, account_number):
+    def __init__(self,username, password, account_number, proxy_list=None):
+        self.proxy_list = proxy_list
+        if self.proxy_list:
+            self.proxy_info = random.choice(self.proxy_list)
+            proxy_host, proxy_port, username_proxy, password_proxy = self.proxy_info.split(':')
+            print(f'http://{username_proxy}:{password_proxy}@{proxy_host}:{proxy_port}')
+            self.proxies = {
+                'http': f'http://{username_proxy}:{password_proxy}@{proxy_host}:{proxy_port}',
+                'https': f'http://{username_proxy}:{password_proxy}@{proxy_host}:{proxy_port}'
+            }
+        else:
+            self.proxies = None
         self.bank_list = None
         self.file = f"db/users/{username}.json"
         self.username = username
@@ -120,7 +131,7 @@ class VPBank:
             }
         }
 
-        response = requests.post(url, headers=headers, data=json.dumps(payload))
+        response = requests.post(url, headers=headers, data=json.dumps(payload),cookies=self.cookie,proxies=self.proxies)
         cookie_string = response.cookies
 
         tokenKey = response.headers.get('TokenKey')
@@ -135,7 +146,7 @@ class VPBank:
             if body['d']['TRUSTED_DEVICE_ENABLED']:
                 return {
                     'code': 302,
-                    'success': True,
+                    'success': False,
                     'message': 'Vui lòng nhập mã xác thực từ điện thoại',
                     'data':{
                          'tokenKey': tokenKey,
@@ -185,7 +196,7 @@ class VPBank:
             'Connection': 'keep-alive',
             'Referer': 'https://neo.vpbank.com.vn/main.html',
         }
-        response = requests.get(url, headers=headers,cookies=self.cookie)
+        response = requests.get(url, headers=headers,cookies=self.cookie,proxies=self.proxies)
         
         if response.status_code == 403:
             return {'code':401,'success': False, 'message': 'Unauthorized!'}
@@ -201,6 +212,8 @@ class VPBank:
         if 'error' in result:
                 return {'code':response.status_code,'success': False, 'message': result['error']['message']['value']}
         elif 'd' in result and 'StatusCode' in result['d'] and result['d']['StatusCode'] == 0:
+            self.is_login = True
+            self.save_data()
             return {
                     'code': 200,
                     'success': True,
@@ -242,16 +255,20 @@ class VPBank:
             'x-csrf-token': self.csrf
         }
 
-        response = requests.get(url, headers=headers,cookies=self.cookie)
-        return json.loads(response.text)
+        response = requests.get(url, headers=headers,cookies=self.cookie,proxies=self.proxies)
+        try:
+            return json.loads(response.text)
+        except:
+            return None
     def get_balance(self):
             if not self.is_login:
                 login = self.login()
+                print(login)
                 if not login['success']:
                     return login
                     
             result = self.list_account()
-            if 'd' in result and 'results' in result['d']:
+            if result and 'd' in result and 'results' in result['d']:
                 for account in result['d']['results']:
                     if self.account_number == account['Number']:
                         if int(account['AvailableBalance']) < 0:
@@ -337,7 +354,7 @@ MaxDataServiceVersion: 2.0
             'x-csrf-token': self.csrf
         }
 
-        response = requests.post(url, headers=headers, data=batch_request,cookies=self.cookie)
+        response = requests.post(url, headers=headers, data=batch_request,cookies=self.cookie,proxies=self.proxies)
         
         pattern = r'\n({.+)\n'
         matches = re.search(pattern, response.text)
@@ -429,7 +446,7 @@ MaxDataServiceVersion: 2.0
             'x-csrf-token': self.csrf
         }
 
-        response = requests.post(url, headers=headers, data=batch_request,cookies=self.cookie)
+        response = requests.post(url, headers=headers, data=batch_request,cookies=self.cookie,proxies=self.proxies)
 
         body = json.loads(response.text)
 
