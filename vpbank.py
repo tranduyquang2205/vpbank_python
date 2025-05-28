@@ -260,7 +260,7 @@ class VPBank:
             return json.loads(response.text)
         except:
             return None
-    def get_balance(self):
+    def get_balance(self,retry=0):
             if not self.is_login:
                 login = self.login()
                 print(login)
@@ -285,10 +285,14 @@ class VPBank:
                             }}
                 return {'code':404,'success': False, 'message': 'account_number not found!'} 
             else: 
-                self.is_login = False
-                self.save_data()
-                return {'code':520 ,'success': False, 'message': 'Unknown Error!'} 
-    def check_history(self, start, end):
+                retry += 1
+                if retry < 2:
+                    return self.get_balance(retry)
+                elif retry >= 2:
+                    self.is_login = False
+                    self.save_data()
+                    return {'code':520 ,'success': False, 'message': 'Unknown Error!'} 
+    def check_history(self, start, end,retry=0):
         if not self.is_login:
                 login = self.login()
                 if not login['success']:
@@ -379,13 +383,13 @@ MaxDataServiceVersion: 2.0
                         "message": body['error']['message']['value']
                     }
         else:
-            self.is_login = False
-            self.save_data()
-            return  {
-                        "success": False,
-                        "code": 503,
-                        "message": "Service Unavailable!"
-                    }
+            retry += 1
+            if retry < 2:
+                return self.check_history(start, end,retry)
+            elif retry >= 2:
+                self.is_login = False
+                self.save_data()
+                return {'code':503 ,'success': False, 'message': 'Service Unavailable!'} 
 
     def check_account_name(self, account_number, bank_code):
         bank_id = self.find_id_by_bank_code(self.bank_list['d']['results'], bank_code)
